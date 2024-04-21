@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Bing Rewards",
+  "description": "Bing Rewards auto search extension",
+  "version": "1.0.0",
+  "action": {
+    "default_popup": "index.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["contentScript.js"]
+    }
+  ]
+}
