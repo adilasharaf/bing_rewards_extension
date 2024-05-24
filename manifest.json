@@ -1,18 +1,26 @@
 {
+  "version": "1.0.0",
   "manifest_version": 3,
   "name": "Bing Rewards",
+  "host_permissions": ["*://*/*"],
   "description": "Bing Rewards auto search extension",
-  "version": "1.0.0",
+  "permissions": [
+    "storage",
+    "scripting",
+    "contextMenus",
+    "declarativeNetRequest",
+    "activeTab",
+    "tabs"
+  ],
   "action": {
     "default_popup": "index.html"
   },
-  "background": {
-    "service_worker": "background.js"
-  },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["contentScript.js"]
+      "all_frames": true,
+      "matches": ["https://www.bing.com/*", "https://bing.com/*"],
+      "run_at": "document_start",
+      "js": ["content.js"]
     }
   ]
 }

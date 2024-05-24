@@ -2,11 +2,29 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width ,initial-scale=1.0" />
-    <title>Document</title>
+    <meta name="viewport" content=" initial-scale=1.0" />
+    <title>Select Total Search Count.</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div id="root"></div>
-    <script src="./react.js"></script>
+    <div class="form-container">
+      <h2>Select Total Count.</h2>
+
+      <div class="container">
+        <label for="mobile">Mobile:</label>
+        <select id="mobile" name="mobile"></select>
+      </div>
+
+      <div class="container">
+        <label for="desktop">Desktop:</label>
+        <select id="desktop" name="desktop"></select>
+      </div>
+
+      <div class="container">
+        <label for="desktop">Desktop:</label>
+        <input id="desktop" name="desktop"></select>
+      </div>
+      <button onclick="handleClick()">Submit</button>
+    </div>
   </body>
 </html>
