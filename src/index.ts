@@ -1,32 +1,40 @@
+import {
+  getCountDataFromLocalStorage,
+  getSearchTypeFromStorage,
+  getUserAgentFromStorage,
+  setCountData,
+} from "./common";
+import { SEARCH_MODES } from "./constants/array.constants";
+import {
+  DESKTOP,
+  DESKTOP_TOTAL_KEY,
+  MOBILE,
+  MOBILE_TOTAL_KEY,
+  MOBILE_USER_AGENT_KEY,
+  SEARCH_MODE_KEY,
+} from "./constants/string.constants";
+
 const mobileSelect: HTMLSelectElement = document.getElementById(
-  "mobile"
+  MOBILE
 ) as HTMLSelectElement;
 
 const desktopSelect: HTMLSelectElement = document.getElementById(
-  "desktop"
+  DESKTOP
 ) as HTMLSelectElement;
 
-const mobileKey: string = "mobile-count";
-const dekstopKey: string = "desktop-count";
+const modeSelect: HTMLSelectElement = document.getElementById(
+  "mode"
+) as HTMLSelectElement;
 
-function setCountData(key: string, count: number): void {
-  localStorage.setItem(key, count.toString());
-}
+const userAgentInput: HTMLInputElement = document.getElementById(
+  "user-agent"
+) as HTMLInputElement;
 
-function getCountDataFromLocalStorage(key: string): number {
-  const data = localStorage.getItem(key);
-  if (data) {
-    return Number.parseInt(data);
-  }
-  if (key == mobileKey) {
-    setCountData(key, 25);
-  } else {
-    setCountData(key, 35);
-  }
-  return getCountDataFromLocalStorage(key);
-}
+const sumbitButton: HTMLButtonElement = document.getElementById(
+  "submit-button"
+) as HTMLButtonElement;
 
-function populateSelect() {
+async function populateItems() {
   if (mobileSelect) {
     for (let i = 0; i < 100; i++) {
       const option: HTMLOptionElement = document.createElement("option");
@@ -34,7 +42,9 @@ function populateSelect() {
       option.text = i.toString();
       mobileSelect.appendChild(option);
     }
-    mobileSelect.value = getCountDataFromLocalStorage(mobileKey).toString();
+
+    mobileSelect.value =
+      getCountDataFromLocalStorage(MOBILE_TOTAL_KEY).toString();
   }
 
   if (desktopSelect) {
@@ -44,7 +54,22 @@ function populateSelect() {
       option.text = i.toString();
       desktopSelect.appendChild(option);
     }
-    desktopSelect.value = getCountDataFromLocalStorage(dekstopKey).toString();
+    desktopSelect.value =
+      getCountDataFromLocalStorage(DESKTOP_TOTAL_KEY).toString();
+  }
+
+  if (modeSelect) {
+    for (let i = 0; i < SEARCH_MODES.length; i++) {
+      const option: HTMLOptionElement = document.createElement("option");
+      option.value = SEARCH_MODES[i];
+      option.text = SEARCH_MODES[i];
+      modeSelect.appendChild(option);
+    }
+    modeSelect.value = await getSearchTypeFromStorage();
+  }
+
+  if (userAgentInput) {
+    userAgentInput.value = await getUserAgentFromStorage();
   }
 }
 
@@ -55,8 +80,17 @@ function handleClick() {
   const selectedDesktop = desktopSelect.value;
   console.log(`Selected Desktop: ${selectedDesktop}`);
 
-  setCountData(mobileKey, Number.parseInt(selectedMobile));
-  setCountData(dekstopKey, Number.parseInt(selectedDesktop));
+  const selectedMode = modeSelect.value;
+  console.log(`Selected Search Mode: ${selectedMode}`);
+
+  const userAgent = userAgentInput.value;
+  console.log(`User Agent: ${userAgent}`);
+
+  setCountData(MOBILE_TOTAL_KEY, Number.parseInt(selectedMobile));
+  setCountData(DESKTOP_TOTAL_KEY, Number.parseInt(selectedDesktop));
+  localStorage.setItem(SEARCH_MODE_KEY, selectedMode);
+  localStorage.setItem(MOBILE_USER_AGENT_KEY, userAgent);
 }
 
-populateSelect();
+sumbitButton.addEventListener("click", handleClick);
+populateItems();

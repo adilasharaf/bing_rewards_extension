@@ -1,3 +1,5 @@
+import { AUTO, DESKTOP, MOBILE } from "./string.constants";
+
 const WORDS = [
   "Algorithm",
   "Binary",
@@ -296,4 +298,5 @@ const WORDS = [
   "CI/CD",
 ];
 
-export { WORDS };
+const SEARCH_MODES: string[] = [MOBILE, DESKTOP, AUTO];
+export { WORDS, SEARCH_MODES };

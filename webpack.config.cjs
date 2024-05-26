@@ -6,8 +6,9 @@ module.exports = {
   mode: "production",
   target: "web",
   entry: {
-    content: "./src/content/content.ts",
+    content: "./src/content.ts",
     index: "./src/index.ts",
+    background: "./src/background.ts",
   },
   output: {
     path: path.resolve(__dirname, "dist"),
