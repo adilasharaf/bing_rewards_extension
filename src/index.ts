@@ -1,18 +1,6 @@
-import {
-  getCountDataFromLocalStorage,
-  getSearchTypeFromStorage,
-  getUserAgentFromStorage,
-  setCountData,
-} from "./common";
+import { getDatafromStorage, setData } from "./common";
 import { SEARCH_MODES } from "./constants/array.constants";
-import {
-  DESKTOP,
-  DESKTOP_TOTAL_KEY,
-  MOBILE,
-  MOBILE_TOTAL_KEY,
-  MOBILE_USER_AGENT_KEY,
-  SEARCH_MODE_KEY,
-} from "./constants/string.constants";
+import { DESKTOP, MOBILE, SET_DATA } from "./constants/string.constants";
 
 const mobileSelect: HTMLSelectElement = document.getElementById(
   MOBILE
@@ -34,62 +22,64 @@ const sumbitButton: HTMLButtonElement = document.getElementById(
   "submit-button"
 ) as HTMLButtonElement;
 
+let contentData: DataInterface;
+
 async function populateItems() {
-  if (mobileSelect) {
-    for (let i = 0; i < 100; i++) {
-      const option: HTMLOptionElement = document.createElement("option");
-      option.value = i.toString();
-      option.text = i.toString();
-      mobileSelect.appendChild(option);
+  contentData = await getDatafromStorage();
+  if (!contentData) {
+    setTimeout(async () => {
+      await populateItems();
+    }),
+      1000;
+  } else {
+    if (mobileSelect) {
+      for (let i = 0; i < 100; i++) {
+        const option: HTMLOptionElement = document.createElement("option");
+        option.value = i.toString();
+        option.text = i.toString();
+        mobileSelect.appendChild(option);
+      }
+
+      mobileSelect.value = contentData.mobileTotal.toString();
     }
 
-    mobileSelect.value =
-      getCountDataFromLocalStorage(MOBILE_TOTAL_KEY).toString();
-  }
-
-  if (desktopSelect) {
-    for (let i = 0; i < 100; i++) {
-      const option: HTMLOptionElement = document.createElement("option");
-      option.value = i.toString();
-      option.text = i.toString();
-      desktopSelect.appendChild(option);
+    if (desktopSelect) {
+      for (let i = 0; i < 100; i++) {
+        const option: HTMLOptionElement = document.createElement("option");
+        option.value = i.toString();
+        option.text = i.toString();
+        desktopSelect.appendChild(option);
+      }
+      desktopSelect.value = contentData.desktopTotal.toString();
     }
-    desktopSelect.value =
-      getCountDataFromLocalStorage(DESKTOP_TOTAL_KEY).toString();
-  }
 
-  if (modeSelect) {
-    for (let i = 0; i < SEARCH_MODES.length; i++) {
-      const option: HTMLOptionElement = document.createElement("option");
-      option.value = SEARCH_MODES[i];
-      option.text = SEARCH_MODES[i];
-      modeSelect.appendChild(option);
+    if (modeSelect) {
+      for (let i = 0; i < SEARCH_MODES.length; i++) {
+        const option: HTMLOptionElement = document.createElement("option");
+        option.value = SEARCH_MODES[i];
+        option.text = SEARCH_MODES[i];
+        modeSelect.appendChild(option);
+      }
+      modeSelect.value = contentData.searchMode;
     }
-    modeSelect.value = await getSearchTypeFromStorage();
-  }
 
-  if (userAgentInput) {
-    userAgentInput.value = await getUserAgentFromStorage();
+    if (userAgentInput) {
+      userAgentInput.value = contentData.userAgent;
+    }
   }
 }
 
-function handleClick() {
-  const selectedMobile = mobileSelect.value;
-  console.log(`Selected Mobile: ${selectedMobile}`);
-
-  const selectedDesktop = desktopSelect.value;
-  console.log(`Selected Desktop: ${selectedDesktop}`);
-
-  const selectedMode = modeSelect.value;
-  console.log(`Selected Search Mode: ${selectedMode}`);
-
-  const userAgent = userAgentInput.value;
-  console.log(`User Agent: ${userAgent}`);
-
-  setCountData(MOBILE_TOTAL_KEY, Number.parseInt(selectedMobile));
-  setCountData(DESKTOP_TOTAL_KEY, Number.parseInt(selectedDesktop));
-  localStorage.setItem(SEARCH_MODE_KEY, selectedMode);
-  localStorage.setItem(MOBILE_USER_AGENT_KEY, userAgent);
+async function handleClick() {
+  await chrome.runtime.sendMessage({
+    action: SET_DATA,
+    data: {
+      ...contentData,
+      mobileTotal: Number.parseInt(mobileSelect.value),
+      userAgent: userAgentInput.value,
+      desktopTotal: Number.parseInt(desktopSelect.value),
+      searchMode: modeSelect.value,
+    },
+  });
 }
 
 sumbitButton.addEventListener("click", handleClick);

@@ -5,12 +5,15 @@
   "host_permissions": ["*://*/*"],
   "description": "Bing Rewards auto search extension",
   "permissions": [
-    "storage",
     "scripting",
     "contextMenus",
-    "declarativeNetRequest",
     "activeTab",
-    "tabs"
+    "tabs",
+    "storage",
+    "unlimitedStorage",
+    "tabs",
+    "declarativeNetRequest",
+    "offscreen"
   ],
   "background": {
     "service_worker": "background.js"
