@@ -1,62 +1,51 @@
 "use strict";
-import { WORDS } from "./constants/array.constants";
+import { WORDS } from "../constants/array.constants";
+import { consoleRequest } from "../constants/function.constants";
 import {
-  AUTO,
-  DESKTOP,
-  DESKTOP_COUNT_KEY,
-  DESKTOP_USER_AGENT,
-  GET_COUNT_DATA_FROM_LOCAL_STORAGE,
   GET_DATA_FROM_STORAGE,
+  GET_DESKTOP_COUNT,
+  GET_MOBILE_COUNT,
   GET_WORDS_URL,
-  MOBILE,
-  MOBILE_COUNT_KEY,
-  MOBILE_USER_AGENT,
-  SET_COUNT_DATA,
-  SET_DATA,
-} from "./constants/string.constants";
+  SET_SUCCESS,
+} from "../constants/string.constants";
+import { DataInterface } from "../interface/data.interface";
+import { RequestInterface } from "../interface/request.interface";
 
 let contentData: DataInterface;
 let mobileCount: number;
 let desktopCount: number;
 // functions
 
-chrome.runtime.onMessage.addListener((request, _, response) => {
-  // console.log(request);
-  switch (request.action) {
+chrome.runtime.onMessage.addListener((request: RequestInterface) => {
+  switch (request.method) {
     case GET_DATA_FROM_STORAGE:
-      contentData = request.data;
-      console.log(`Content Data :  ${contentData}`);
-      break;
+      contentData = request.data as DataInterface;
+      return;
 
-    case GET_COUNT_DATA_FROM_LOCAL_STORAGE:
-      switch (request.data.key) {
-        case MOBILE_COUNT_KEY:
-          mobileCount = request.data.data;
-          console.log(`Mobile count :  ${mobileCount}`);
-          break;
+    case GET_MOBILE_COUNT:
+      mobileCount = request.data as number;
+      console.log(`Mobile count :  ${mobileCount}`);
+      return;
 
-        case DESKTOP_COUNT_KEY:
-          desktopCount = request.data.data;
-          console.log(`Desktop count :  ${desktopCount}`);
-          break;
+    case GET_DESKTOP_COUNT:
+      desktopCount = request.data as number;
+      console.log(`Desktop count :  ${desktopCount}`);
+      return;
 
-        default:
-          console.log(request);
-          break;
-      }
-      break;
+    default:
+      consoleRequest(request);
   }
 });
 
 async function sendMessage(
-  action: string,
-  data?: DataInterface | string,
-  count?: number
+  method: string,
+  data?: DataInterface | string | number | any,
+  key?: string
 ) {
   await chrome.runtime.sendMessage({
-    action: action,
+    method: method,
     data: data,
-    count: count,
+    key: key,
   });
 }
 
@@ -72,51 +61,17 @@ async function getRandomWord(): Promise<string> {
   }
 }
 
-async function getRandomDeviceType(): Promise<string | undefined> {
-  if (contentData.searchMode != AUTO) {
-    return contentData.searchMode;
-  }
-  const deviceTypes: string[] = [
-    MOBILE,
-    DESKTOP,
-  ];
-  let randomDevice: string =
-    deviceTypes[Math.floor(Math.random() * deviceTypes.length)];
-  console.log(`Random Device Before: ${randomDevice}`);
-
-  if (randomDevice == MOBILE) {
-    if (mobileCount == contentData.mobileTotal) {
-      randomDevice = DESKTOP;
-    }
-  }
-  if (randomDevice == DESKTOP) {
-    if (desktopCount == contentData.desktopTotal) {
-      randomDevice = MOBILE;
-    }
-  }
-  console.log(`Random Device After: ${randomDevice}`);
-
-  await sendMessage(SET_DATA);
-  if (randomDevice == MOBILE) {
-    await sendMessage(SET_DATA, {
-      ...contentData,
-      userAgent: MOBILE_USER_AGENT,
-    });
-  } else {
-    await sendMessage(SET_DATA, {
-      ...contentData,
-      userAgent: DESKTOP_USER_AGENT,
-    });
-  }
-}
-
 // Function to type out each character with a delay
 async function typeSearchTerm(
   searchTerm: string,
   searchBox: HTMLInputElement,
   seachFunction: Function
 ) {
-  await getRandomDeviceType();
+  await sendMessage(SET_SUCCESS, {
+    contentData: contentData,
+    mobileCount: mobileCount,
+    desktopCount: desktopCount,
+  });
   searchBox.value = ""; // Clear the search box before typing
   let i = 0;
   const typingDelay = 1000; // Delay in milliseconds between keystrokes
@@ -125,11 +80,6 @@ async function typeSearchTerm(
       searchBox.value += searchTerm.charAt(i);
       i++;
     } else {
-      if (contentData.deviceType == DESKTOP) {
-        await sendMessage(SET_COUNT_DATA, DESKTOP_COUNT_KEY, desktopCount + 1);
-      } else {
-        await sendMessage(SET_COUNT_DATA, MOBILE_COUNT_KEY, mobileCount + 1);
-      }
       seachFunction();
       clearInterval(interval);
     }
@@ -190,25 +140,38 @@ async function performSearch() {
   }
 }
 
-async function startSearch() {
-  setTimeout(async () => {
-    if (
-      mobileCount != contentData.mobileTotal &&
-      desktopCount != contentData.desktopTotal
-    ) {
-      await performSearch();
-    }
-  }, Math.floor(Math.random() * (16000 - 10000 + 1)) + 10000);
-}
-
 async function init() {
   await sendMessage(GET_DATA_FROM_STORAGE);
-  await sendMessage(GET_COUNT_DATA_FROM_LOCAL_STORAGE, MOBILE_COUNT_KEY);
-  await sendMessage(GET_COUNT_DATA_FROM_LOCAL_STORAGE, DESKTOP_COUNT_KEY);
+  await sendMessage(GET_MOBILE_COUNT);
+  await sendMessage(GET_DESKTOP_COUNT);
 
   if (mobileCount && desktopCount && contentData) {
     console.log("Starting Search : Success");
-    await startSearch();
+
+    setTimeout(async () => {
+      console.log({
+        desktopCount: desktopCount,
+        desktopTotal: contentData.desktopTotal,
+        mobileCount: mobileCount,
+        mobileTotal: contentData.mobileTotal,
+      });
+
+      console.log(
+        `Count-Total check : ${
+          mobileCount <= contentData.mobileTotal ||
+          desktopCount <= contentData.desktopTotal
+        }`
+      );
+      if (
+        mobileCount <= contentData.mobileTotal ||
+        desktopCount <= contentData.desktopTotal
+      ) {
+        await performSearch();
+      } else {
+        console.log("Completed Search");
+        window.alert("Auto Searches completed successfully");
+      }
+    }, Math.floor(Math.random() * (16000 - contentData.time * 1000 + 1)) + contentData.time * 1000);
   } else {
     console.log("Starting Search : Failed");
     setTimeout(async () => {

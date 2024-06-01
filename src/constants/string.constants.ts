@@ -1,49 +1,58 @@
 const GET_WORDS_URL = "https://random-word-api.herokuapp.com/word?number=";
 const today: Date = new Date();
-const countKey: string = `${today.getDate()}_${today.getMonth()}_${today.getFullYear()}`;
 
 // const SEARCH_MODE_KEY: string = "search_mode";
-const MOBILE: string = "mobile";
 const DESKTOP: string = "desktop";
+const MOBILE: string = "mobile";
 const AUTO: string = "auto";
-// const DEVICE_TYPE_KEY = "device_type";
-// const SET_DEVICE_TYPE = "setDeviceType";
-// const SET_USER_AGENT = "setUserAgent";
-// const GET_USER_AGENT_FROM_STORAGE = "getUserAgentFromStorage";
-// const GET_SEARCH_TYPE_FROM_STORAGE = "getSearchTypeFromStorage";
-const GET_COUNT_DATA_FROM_LOCAL_STORAGE = "getCountDataFromLocalStorage";
-const SET_COUNT_DATA = "setCountData";
+
+const SET_MOBILE_COUNT = "setMobileCount";
+const GET_MOBILE_COUNT = "getMobileCount";
+const GET_DESKTOP_COUNT = "getDesktopCount";
+const BUTTON_PRESS = "buttonPress";
+const SET_SUCCESS = "setSuccess";
+const SET_DESKTOP_COUNT = "setDesktopCount";
 const SET_DATA = "setData";
 const GET_DATA_FROM_STORAGE = "getDatafromStorage";
+
+const countKey: string = `${today.getDate()}_${today.getMonth()}_${today.getFullYear()}`;
 const DATA_KEY = "data_key";
-
-// const GET_DEVICE_TYPE_FROM_STORAGE = "getDeviceTypeFromStorage";
-// mobile
-// const MOBILE_TOTAL_KEY: string = `${MOBILE}_count`;
-
 const MOBILE_COUNT_KEY: string = `${MOBILE}_${countKey}`;
-// const MOBILE_USER_AGENT_KEY: string = "mobile_user_agent";
+const DESKTOP_COUNT_KEY: string = `${DESKTOP}_${countKey}`;
+
 const MOBILE_USER_AGENT =
   "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/125.0.6422.80 Mobile/15E148 Safari/604.1";
 
+const SEARCH_MODE = "search-mode";
+const DEVICE_TYPE = "device-type";
+const TIME = "time";
+const USER_AGENT = "user-agent";
+const SUBMIT_BUTTON = "submit-button";
+const OPTION = "option";
+
 // desktop
-// const DESKTOP_TOTAL_KEY: string = `${DESKTOP}_count`;
-const DESKTOP_COUNT_KEY: string = `${DESKTOP}_${countKey}`;
-const DESKTOP_USER_AGENT: string =
-  "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36";
+
 export {
   GET_WORDS_URL,
-  // SEARCH_MODE_KEY,
   MOBILE,
   DESKTOP,
   AUTO,
-  MOBILE_USER_AGENT,
   MOBILE_COUNT_KEY,
   DESKTOP_COUNT_KEY,
-  DESKTOP_USER_AGENT,
-  GET_COUNT_DATA_FROM_LOCAL_STORAGE,
-  SET_COUNT_DATA,
+  GET_MOBILE_COUNT,
+  GET_DESKTOP_COUNT,
+  SET_MOBILE_COUNT,
   SET_DATA,
   GET_DATA_FROM_STORAGE,
   DATA_KEY,
+  MOBILE_USER_AGENT,
+  SET_DESKTOP_COUNT,
+  BUTTON_PRESS,
+  SET_SUCCESS,
+  SEARCH_MODE,
+  DEVICE_TYPE,
+  USER_AGENT,
+  TIME,
+  SUBMIT_BUTTON,
+  OPTION
 };

@@ -6,9 +6,9 @@ module.exports = {
   mode: "production",
   target: "web",
   entry: {
-    content: "./src/content.ts",
-    index: "./src/index.ts",
-    background: "./src/background.ts",
+    content: "./src/content/content.ts",
+    popup: "./src/popup/popup.ts",
+    background: "./src/background/background.ts",
   },
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -16,10 +16,11 @@ module.exports = {
     clean: true,
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: "./src/index.html",
-      chunksSortMode: "auto",
-    }),
+    // new HtmlWebpackPlugin({
+    //   template: "./src/popup/popup.html",
+    //   filename: "popup.html",
+    //   chunksSortMode: "auto",
+    // }),
     new CopyPlugin({
       patterns: [
         {
@@ -27,7 +28,11 @@ module.exports = {
           to: path.resolve("dist"),
         },
         {
-          from: path.resolve("./src/style.css"),
+          from: path.resolve("./src/popup/style.css"),
+          to: path.resolve("dist"),
+        },
+        {
+          from: path.resolve("./src/popup/popup.html"),
           to: path.resolve("dist"),
         },
       ],

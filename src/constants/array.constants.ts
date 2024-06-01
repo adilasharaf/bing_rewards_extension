@@ -299,4 +299,6 @@ const WORDS = [
 ];
 
 const SEARCH_MODES: string[] = [MOBILE, DESKTOP, AUTO];
-export { WORDS, SEARCH_MODES };
+
+const DEVICE_TYPES: string[] = [MOBILE, DESKTOP];
+export { WORDS, SEARCH_MODES, DEVICE_TYPES };
