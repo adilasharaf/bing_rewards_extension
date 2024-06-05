@@ -29,6 +29,8 @@ const TIME = "time";
 const USER_AGENT = "user-agent";
 const SUBMIT_BUTTON = "submit-button";
 const OPTION = "option";
+const PACAKGE = "package";
+const CONSTANT = "constant";
 
 // desktop
 
@@ -54,5 +56,7 @@ export {
   USER_AGENT,
   TIME,
   SUBMIT_BUTTON,
-  OPTION
+  OPTION,
+  PACAKGE,
+  CONSTANT,
 };

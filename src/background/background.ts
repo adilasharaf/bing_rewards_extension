@@ -37,7 +37,9 @@ chrome.runtime.onInstalled.addListener(async function (details) {
   if (details.reason == chrome.runtime.OnInstalledReason.INSTALL) {
     await setData(data);
   } else if (details.reason == chrome.runtime.OnInstalledReason.UPDATE) {
-    await setData(data);
+    if (!(await getDatafromStorage())) {
+      await setData(data);
+    }
   }
 });
 

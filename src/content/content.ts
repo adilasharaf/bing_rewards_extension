@@ -2,14 +2,20 @@
 import { WORDS } from "../constants/array.constants";
 import { consoleRequest } from "../constants/function.constants";
 import {
+  AUTO,
+  CONSTANT,
+  DESKTOP,
   GET_DATA_FROM_STORAGE,
   GET_DESKTOP_COUNT,
   GET_MOBILE_COUNT,
   GET_WORDS_URL,
+  MOBILE,
+  PACAKGE,
   SET_SUCCESS,
 } from "../constants/string.constants";
 import { DataInterface } from "../interface/data.interface";
 import { RequestInterface } from "../interface/request.interface";
+import { generate } from "../packages/random-word.package";
 
 let contentData: DataInterface;
 let mobileCount: number;
@@ -51,13 +57,16 @@ async function sendMessage(
 
 // Function to get a random word from the list
 async function getRandomWord(): Promise<string> {
-  try {
-    const response = await fetch(GET_WORDS_URL + 1);
-    const data = await response.json();
-    console.log(data);
-    return data[0];
-  } catch (error) {
-    return WORDS[Math.floor(Math.random() * WORDS.length)];
+  const list = [PACAKGE, CONSTANT];
+  const random = list[Math.random() * list.length];
+  switch (random) {
+    case PACAKGE:
+      return generate({ minLength: 9, maxLength: 15}) as string;
+    case CONSTANT:
+      return WORDS[Math.floor(Math.random() * WORDS.length)];
+    default:
+      console.log(random);
+      return generate({ minLength: 9, maxLength: 15 }) as string;
   }
 }
 
@@ -145,39 +154,58 @@ async function init() {
   await sendMessage(GET_MOBILE_COUNT);
   await sendMessage(GET_DESKTOP_COUNT);
 
-  if (mobileCount && desktopCount && contentData) {
-    console.log("Starting Search : Success");
-
-    setTimeout(async () => {
-      console.log({
-        desktopCount: desktopCount,
-        desktopTotal: contentData.desktopTotal,
-        mobileCount: mobileCount,
-        mobileTotal: contentData.mobileTotal,
-      });
-
-      console.log(
-        `Count-Total check : ${
-          mobileCount <= contentData.mobileTotal ||
-          desktopCount <= contentData.desktopTotal
-        }`
-      );
-      if (
-        mobileCount <= contentData.mobileTotal ||
-        desktopCount <= contentData.desktopTotal
-      ) {
-        await performSearch();
-      } else {
-        console.log("Completed Search");
-        window.alert("Auto Searches completed successfully");
-      }
-    }, Math.floor(Math.random() * (16000 - contentData.time * 1000 + 1)) + contentData.time * 1000);
-  } else {
+  if (!mobileCount && !desktopCount && !contentData) {
     console.log("Starting Search : Failed");
     setTimeout(async () => {
-      await init();
+      return await init();
     }, 5000);
   }
+
+  console.log("Starting Search : Success");
+  setTimeout(async () => {
+    console.log({
+      desktopCount: desktopCount,
+      desktopTotal: contentData.desktopTotal,
+      mobileCount: mobileCount,
+      mobileTotal: contentData.mobileTotal,
+    });
+
+    switch (contentData.searchMode) {
+      case AUTO:
+        if (
+          mobileCount >= contentData.mobileTotal &&
+          desktopCount >= contentData.desktopTotal
+        ) {
+          console.log("Completed  Auto Search");
+          window.alert("Auto Searches completed successfully");
+          return;
+        }
+        await performSearch();
+        return;
+
+      case MOBILE:
+        if (mobileCount >= contentData.mobileTotal) {
+          console.log("Completed  Mobile Search");
+          window.alert("Mobile Searches completed successfully");
+          return;
+        }
+        await performSearch();
+        return;
+
+      case DESKTOP:
+        if (desktopCount >= contentData.desktopTotal) {
+          console.log("Completed  Desktop Search");
+          window.alert("Desktop Searches completed successfully");
+          return;
+        }
+        await performSearch();
+        return;
+
+      default:
+        console.log(contentData.searchMode);
+        return;
+    }
+  }, Math.floor(Math.random() * (16000 - contentData.time * 1000 + 1)) + contentData.time * 1000);
 }
 
 // starting extension
