@@ -1,4 +1,4 @@
-import { AUTO, DESKTOP, MOBILE } from "./string.constants";
+import { AUTO, DESKTOP, MOBILE, SUBMIT, SUGGESTION } from "./string.constants";
 
 const WORDS = [
   "Algorithm",
@@ -301,4 +301,6 @@ const WORDS = [
 const SEARCH_MODES: string[] = [MOBILE, DESKTOP, AUTO];
 
 const DEVICE_TYPES: string[] = [MOBILE, DESKTOP];
-export { WORDS, SEARCH_MODES, DEVICE_TYPES };
+const SEARCH_TYPE_LIST = [SUGGESTION, SUBMIT];
+
+export { WORDS, SEARCH_MODES, DEVICE_TYPES, SEARCH_TYPE_LIST };

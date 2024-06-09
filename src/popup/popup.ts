@@ -52,7 +52,7 @@ async function populateItems() {
       1000;
   } else {
     if (mobileSelect) {
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 200; i++) {
         const option: HTMLOptionElement = document.createElement(OPTION);
         option.value = i.toString();
         option.text = i.toString();
@@ -63,7 +63,7 @@ async function populateItems() {
     }
 
     if (desktopSelect) {
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 200; i++) {
         const option: HTMLOptionElement = document.createElement(OPTION);
         option.value = i.toString();
         option.text = i.toString();
@@ -93,7 +93,7 @@ async function populateItems() {
     }
 
     if (timeSelect) {
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 500; i++) {
         const option: HTMLOptionElement = document.createElement(OPTION);
         option.value = i.toString();
         option.text = `${i} s`;
@@ -118,7 +118,7 @@ async function handleClick() {
       desktopTotal: Number.parseInt(desktopSelect.value),
       searchMode: modeSelect.value,
       deviceType: deviceSelect.value,
-      time: timeSelect.value,
+      time: Number.parseInt(timeSelect.value),
     },
   });
 }

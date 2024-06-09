@@ -1,5 +1,6 @@
 import {
   AUTO,
+  BUTTON_PRESS,
   DESKTOP_COUNT_KEY,
   GET_DATA_FROM_STORAGE,
   GET_DESKTOP_COUNT,
@@ -7,6 +8,8 @@ import {
   MOBILE,
   MOBILE_COUNT_KEY,
   MOBILE_USER_AGENT,
+  REDIRECT,
+  RELOAD,
   SET_DATA,
   SET_DESKTOP_COUNT,
   SET_MOBILE_COUNT,
@@ -22,6 +25,7 @@ import {
   setData,
   setSuccess,
   setDataAndChangeUA,
+  getRandomWord,
 } from "../constants/function.constants";
 
 const data: DataInterface = {
@@ -30,7 +34,7 @@ const data: DataInterface = {
   desktopTotal: 35,
   mobileTotal: 25,
   searchMode: AUTO,
-  time: 10,
+  time: 5,
 };
 chrome.runtime.onInstalled.addListener(async function (details) {
   console.log(details.reason);
@@ -47,63 +51,87 @@ chrome.runtime.onMessage.addListener(async (request: RequestInterface) => {
   try {
     switch (request.method) {
       case GET_DATA_FROM_STORAGE:
-        await sendMessage(
+        return await sendMessage(
           request.method,
           (await getDatafromStorage()) as DataInterface
         );
-        break;
 
       case GET_MOBILE_COUNT:
-        await sendMessage(
+        return await sendMessage(
           GET_MOBILE_COUNT,
           (await getCountFromStorage(MOBILE_COUNT_KEY)) as number,
           MOBILE_COUNT_KEY
         );
-        break;
 
       case GET_DESKTOP_COUNT:
-        await sendMessage(
+        return await sendMessage(
           GET_DESKTOP_COUNT,
           (await getCountFromStorage(DESKTOP_COUNT_KEY)) as number,
           DESKTOP_COUNT_KEY
         );
-        break;
 
       case SET_MOBILE_COUNT:
-        await setCountData(MOBILE_COUNT_KEY, request.data as number);
-        break;
+        return await setCountData(MOBILE_COUNT_KEY, request.data as number);
 
       case SET_DESKTOP_COUNT:
-        await setCountData(DESKTOP_COUNT_KEY, request.data as number);
-        break;
+        return await setCountData(DESKTOP_COUNT_KEY, request.data as number);
 
       case SET_DATA:
-        await setData(request.data as DataInterface);
-        break;
+        return await setData(request.data as DataInterface);
 
       case SET_SUCCESS:
-        await setSuccess(
+        return await setSuccess(
           request.data.contentData as DataInterface,
           request.data.mobileCount as number,
           request.data.desktopCount as number
         );
-        break;
 
-      default:
+      case RELOAD:
+        return await reloadTab();
+
+      case REDIRECT:
+        return await reloadTab(request.data);
+
+      case BUTTON_PRESS:
         await setDataAndChangeUA(request.data as DataInterface).then(
           async () => {
             await chrome.tabs.create({
-              url: "https://www.bing.com",
+              url: "https://www.bing.com/search?q=" + getRandomWord(),
               active: true,
             });
           }
         );
-        return;
+        break;
+
+      default:
+        console.log(request);
+        break;
     }
   } catch (error) {
     console.error("Error in message listener:", error);
   }
 });
+
+const reloadTab = async (url?: string) => {
+  chrome.tabs.query({}, async (tabs) => {
+    for (let index = 0; index < tabs.length; index++) {
+      const element = tabs[index];
+      if (element.id) {
+        if (element.url?.indexOf("www.bing.com") !== -1) {
+          if (url) {
+            await chrome.tabs.update(element.id, {
+              url: `https://www.bing.com${url}`,
+            });
+          } else {
+            await chrome.tabs.reload(element.id);
+          }
+        }
+      } else {
+        console.log("Result Message Send Failed");
+      }
+    }
+  });
+};
 
 const sendMessage = async (
   method: string,

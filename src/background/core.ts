@@ -1,6 +1,4 @@
-import {
-  MOBILE,
-} from "../constants/string.constants";
+import { MOBILE } from "../constants/string.constants";
 import { DataInterface } from "../interface/data.interface";
 import { app } from "./chrome";
 
@@ -48,7 +46,7 @@ const core = {
   },
   action: {
     changeUA: async function (data: DataInterface) {
-      await core.register.netrequest(data);
+      return await core.register.netrequest(data);
     },
   },
 };

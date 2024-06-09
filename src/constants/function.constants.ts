@@ -1,13 +1,17 @@
 import { core } from "../background/core";
 import {
   AUTO,
+  CONSTANT,
   DATA_KEY,
   DESKTOP,
   DESKTOP_COUNT_KEY,
   MOBILE,
   MOBILE_COUNT_KEY,
+  PACAKGE,
 } from "../constants/string.constants";
 import { DataInterface } from "../interface/data.interface";
+import { generate } from "../packages/random-word.package";
+import { WORDS } from "./array.constants";
 
 async function getDatafromStorage(): Promise<DataInterface | any> {
   const data = await chrome.storage.local.get(DATA_KEY);
@@ -33,7 +37,7 @@ async function setCountData(key: string, count: number) {
 }
 
 async function setData(data: DataInterface) {
-  // console.log(data);
+  console.log(data);
   return await chrome.storage.local.set({ [DATA_KEY]: data });
 }
 
@@ -67,11 +71,8 @@ async function setSuccess(
         randomDevice = MOBILE;
       }
     }
-
     console.log(`Random Device: ${randomDevice}`);
-
     await setData({ ...contentData, deviceType: randomDevice! });
-
     await core.action.changeUA(contentData);
   }
 }
@@ -80,6 +81,22 @@ async function setDataAndChangeUA(contentData: DataInterface) {
   await setData(contentData);
   await core.action.changeUA(contentData);
 }
+
+// Function to get a random word from the list
+function getRandomWord(): string {
+  const list = [PACAKGE, CONSTANT];
+  const random = list[Math.floor(Math.random() * list.length)];
+  switch (random) {
+    case PACAKGE:
+      return generate({ minLength: 9, maxLength: 15 }) as string;
+    case CONSTANT:
+      return WORDS[Math.floor(Math.floor(Math.random() * WORDS.length))];
+    default:
+      console.log(random);
+      return generate({ minLength: 9, maxLength: 15 }) as string;
+  }
+}
+
 export {
   setCountData,
   getDatafromStorage,
@@ -88,4 +105,5 @@ export {
   setSuccess,
   getCountFromStorage,
   setDataAndChangeUA,
+  getRandomWord,
 };

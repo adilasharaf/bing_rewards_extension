@@ -31,6 +31,10 @@ const SUBMIT_BUTTON = "submit-button";
 const OPTION = "option";
 const PACAKGE = "package";
 const CONSTANT = "constant";
+const RELOAD = "reload";
+const REDIRECT = "redirect";
+const SUGGESTION = "suggestion";
+const SUBMIT = "submit";
 
 // desktop
 
@@ -59,4 +63,8 @@ export {
   OPTION,
   PACAKGE,
   CONSTANT,
+  RELOAD,
+  REDIRECT,
+  SUGGESTION,
+  SUBMIT,
 };

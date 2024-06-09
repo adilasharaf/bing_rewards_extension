@@ -1,0 +1,104 @@
+<form action="/search" id="sb_form" class="hasmic">
+  <div class="b_searchboxForm" role="search" data-bm="2">
+    <div class="qfc" aria-live="polite">
+      <div class="user-prefix">dont</div>
+      <div class="ghost" aria-hidden="true"></div>
+      <button class="nudge" aria-hidden="true" tabindex="-1">Tap</button>
+    </div>
+    <textarea
+      class="b_searchbox"
+      id="sb_form_q"
+      name="q"
+      enterkeyhint="go"
+      rows="1"
+      data-min-rows="1"
+      aria-autocomplete="both"
+      aria-label="Enter your search here - Search suggestions will show as you type"
+      type="search"
+      inputmode="search"
+      value="dont"
+      maxlength="2000"
+      dir=""
+      autocapitalize="off"
+      autocorrect="off"
+      autocomplete="off"
+      spellcheck="false"
+      placeholder="Ask me anything..."
+    >
+dont</textarea
+    ><a id="sw_clx" aria-label="Clear text" role="button"
+      ><div class="sw_tpcbk"></div
+    ></a>
+    <div id="mic_cont_icon" class="mic_cont icon partner">
+      <div
+        class="b_icon tooltip"
+        role="button"
+        tabindex="0"
+        aria-label="Search using voice"
+        data-sbtipx="Search using voice"
+        data-tooltip="Search using voice"
+      >
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path
+            fill="#174AE4"
+            d="M16.25 9C16.6297 9 16.9435 9.2822 16.9932 9.6482L17 9.75V10.25C17 13.8094 14.245 16.7254 10.751 16.9817L10.75 19.25C10.75 19.6642 10.4142 20 10 20C9.6203 20 9.3065 19.7178 9.2568 19.3518L9.25 19.25V16.9818C5.83323 16.7316 3.12283 13.938 3.00406 10.4863L3 10.25V9.75C3 9.3358 3.33579 9 3.75 9C4.1297 9 4.44349 9.2822 4.49315 9.6482L4.5 9.75V10.25C4.5 13.077 6.73445 15.3821 9.5336 15.4956L9.75 15.5H10.25C13.077 15.5 15.3821 13.2656 15.4956 10.4664L15.5 10.25V9.75C15.5 9.3358 15.8358 9 16.25 9ZM10 0C12.2091 0 14 1.79086 14 4V10C14 12.2091 12.2091 14 10 14C7.79086 14 6 12.2091 6 10V4C6 1.79086 7.79086 0 10 0ZM10 1.5C8.6193 1.5 7.5 2.61929 7.5 4V10C7.5 11.3807 8.6193 12.5 10 12.5C11.3807 12.5 12.5 11.3807 12.5 10V4C12.5 2.61929 11.3807 1.5 10 1.5Z"
+          ></path>
+        </svg>
+      </div>
+    </div>
+    <span class="b_searchboxSubmitWrapper"
+      ><input
+        type="submit"
+        class="b_searchboxSubmit"
+        id="sb_form_go"
+        title="Search"
+        tabindex="0"
+        name="go"
+        value="Search"
+    /></span>
+    <script type="text/javascript" nonce="">
+      //<![CDATA[
+      (function () {
+        function t() {
+          var n = _ge("b_header");
+          n && (n.className = "b_focus");
+        }
+        var n = _ge("sb_form_q");
+        sj_be(n, "focus", t);
+      })();
+      (function () {
+        var n = _ge("sb_form_q"),
+          t = function (t) {
+            var i;
+            if ((t.code === "Enter" || t.keyCode === 13) && !t.isComposing)
+              return (
+                (n.readOnly = !0),
+                (i = n.form) === null || i === void 0 ? void 0 : i.submit(),
+                !1
+              );
+          };
+        n &&
+          (n.addEventListener("keydown", t),
+          sj_evt &&
+            sj_evt.bind("AS.BindKeyDown", function () {
+              n.removeEventListener("keydown", t);
+            }));
+      })();
+      //]]>
+    </script>
+    <input id="sa_qs" name="qs" value="ds" type="hidden" /><input
+      type="hidden"
+      value="QBRE"
+      name="form"
+    />
+    <div id="sb_toolbar"><div id="sb_chcounter_r" class="b_hide"></div></div>
+  </div>
+  <div id="sw_as" style="display: block; margin-left: -8px; margin-right: -8px">
+    <div
+      class="sa_as"
+      data-priority="2"
+      aria-live="polite"
+      style="display: none"
+    ></div>
+  </div>
+</form>
