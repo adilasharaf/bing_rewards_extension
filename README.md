@@ -1,2 +1,2 @@
 # Microsoft Rewards Extension
-Microsoft/Bing Rewards Chromium Extension for automatic Mobile and Desktop mode searches.
+Microsoft / Bing Rewards Chromium based browser Extension for automatic Mobile and Desktop mode searches.
